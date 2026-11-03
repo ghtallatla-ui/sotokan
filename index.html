@@ -19,7 +19,7 @@
                 <h1 class="text-2xl font-bold text-red-500 flex items-center gap-3">
                     <i class="fa-solid fa-dumbbell text-3xl"></i> نادي شوتوكان VIP - كمال أجسام
                 </h1>
-                <p class="text-slate-400 text-xs mt-1">نظام الإدارة السحابي الآمن (تخزين سحابي كامل لا يضيع)</p>
+                <p class="text-slate-400 text-xs mt-1">نظام الإدارة السحابي الآمن</p>
             </div>
             <button onclick="openAddModal()" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-medium transition shadow-md flex items-center gap-2 text-sm w-full md:w-auto justify-center">
                 <i class="fa-solid fa-user-plus"></i> إضافة لاعب جديد
@@ -89,6 +89,7 @@
                                 <th class="p-4">تاريخ البدء</th>
                                 <th class="p-4">مدة الاشتراك</th>
                                 <th class="p-4">الأيام المتبقية</th>
+                                <th class="p-4">السعر الكلي</th>
                                 <th class="p-4">المدفوع (واصل)</th>
                                 <th class="p-4">المتبقي (دين)</th>
                                 <th class="p-4">الحالة</th>
@@ -130,9 +131,9 @@
                 <!-- النسخ الاحتياطي -->
                 <div class="space-y-2 bg-slate-900 p-4 rounded-xl border border-slate-700">
                     <h3 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                        <i class="fa-solid fa-database text-emerald-400"></i> النسخ الاحتياطي للبيانات (أمان إضافي)
+                        <i class="fa-solid fa-database text-emerald-400"></i> النسخ الاحتياطي للبيانات
                     </h3>
-                    <p class="text-slate-400 text-xs">تحميل كافة سجلات اللاعبين كملف أمان أوفلاين على جهازك.</p>
+                    <p class="text-slate-400 text-xs">تحميل كافة سجلات اللاعبين كملف أمان على جهازك.</p>
                     <button onclick="downloadBackup()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-medium transition flex items-center gap-2">
                         <i class="fa-solid fa-file-export"></i> تنزيل ملف النسخة الاحتياطية
                     </button>
@@ -216,11 +217,11 @@
                     </div>
                     <div id="customDaysDiv" class="hidden">
                         <label class="block text-slate-400 text-sm mb-1">عدد الأيام</label>
-                        <input type="number" id="customDaysInput" value="10" oninput="calculateDefaultPrice()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                        <input type="number" id="customDaysInput" value="10" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
                     </div>
                     <div>
-                        <label class="block text-slate-400 text-sm mb-1">السعر الإجمالي</label>
-                        <input type="number" id="playerTotalPrice" value="200" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                        <label class="block text-slate-400 text-sm mb-1">السعر الإجمالي (ل.س)</label>
+                        <input type="number" id="playerTotalPrice" value="200" required oninput="calculateDebt()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -271,12 +272,57 @@
         </div>
     </div>
 
+    <!-- نافذة تجديد الاشتراك المرنة -->
+    <div id="renewModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-md p-6 shadow-2xl">
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-rotate-right text-emerald-500"></i> تجديد اشتراك اللاعب
+            </h3>
+            <form id="renewForm" onsubmit="submitRenewPlayer(event)" class="space-y-4">
+                <input type="hidden" id="renewPlayerId">
+                <div>
+                    <label class="block text-slate-400 text-sm mb-1">اسم اللاعب</label>
+                    <input type="text" id="renewPlayerName" disabled class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-400">
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-sm mb-1">مدة الاشتراك الجديد</label>
+                    <select id="renewDays" onchange="onRenewTypeChange()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                        <option value="30">شهر كامل (30 يوم)</option>
+                        <option value="15">نص شهر (15 يوم)</option>
+                        <option value="custom">أيام مخصصة...</option>
+                    </select>
+                </div>
+                <div id="renewCustomDiv" class="hidden">
+                    <label class="block text-slate-400 text-sm mb-1">عدد الأيام</label>
+                    <input type="number" id="renewCustomDaysInput" value="10" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-slate-400 text-sm mb-1">السعر الإجمالي (ل.س)</label>
+                        <input type="number" id="renewTotalPrice" value="200" required oninput="calculateRenewDebt()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 text-sm mb-1">المدفوع (الواصل)</label>
+                        <input type="number" id="renewPaid" value="200" required oninput="calculateRenewDebt()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-slate-400 text-sm mb-1">المتبقي (الدين)</label>
+                    <input type="number" id="renewDebt" value="0" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                </div>
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-700">
+                    <button type="button" onclick="closeRenewModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl transition">إلغاء</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl transition">تأكيد التجديد</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- كود جافاسكريبت وربط قاعدة Firebase السحابية -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, push, onValue, remove, update, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // تم ربط قاعدة البيانات الخاصة بك هنا بنجاح
         const firebaseConfig = {
             databaseURL: "https://shotokan-fc198-default-rtdb.firebaseio.com"
         };
@@ -357,16 +403,9 @@
                 paidInput.value = 100;
             } else if(val === 'custom') {
                 customDiv.classList.remove('hidden');
-                calculateDefaultPrice();
+                priceInput.value = '';
+                paidInput.value = '';
             }
-            calculateDebt();
-        };
-
-        window.calculateDefaultPrice = function() {
-            const days = parseInt(document.getElementById('customDaysInput').value) || 1;
-            const suggestedPrice = Math.round((200 / 30) * days);
-            document.getElementById('playerTotalPrice').value = suggestedPrice;
-            document.getElementById('playerPaid').value = suggestedPrice;
             calculateDebt();
         };
 
@@ -375,6 +414,35 @@
             const paid = parseFloat(document.getElementById('playerPaid').value) || 0;
             const debt = total - paid;
             document.getElementById('playerDebt').value = debt >= 0 ? debt : 0;
+        };
+
+        window.onRenewTypeChange = function() {
+            const val = document.getElementById('renewDays').value;
+            const customDiv = document.getElementById('renewCustomDiv');
+            const priceInput = document.getElementById('renewTotalPrice');
+            const paidInput = document.getElementById('renewPaid');
+
+            if(val === '30') {
+                customDiv.classList.add('hidden');
+                priceInput.value = 200;
+                paidInput.value = 200;
+            } else if(val === '15') {
+                customDiv.classList.add('hidden');
+                priceInput.value = 100;
+                paidInput.value = 100;
+            } else if(val === 'custom') {
+                customDiv.classList.remove('hidden');
+                priceInput.value = '';
+                paidInput.value = '';
+            }
+            calculateRenewDebt();
+        };
+
+        window.calculateRenewDebt = function() {
+            const total = parseFloat(document.getElementById('renewTotalPrice').value) || 0;
+            const paid = parseFloat(document.getElementById('renewPaid').value) || 0;
+            const debt = total - paid;
+            document.getElementById('renewDebt').value = debt >= 0 ? debt : 0;
         };
 
         window.openAddModal = function() {
@@ -409,6 +477,52 @@
             document.getElementById('editModal').classList.add('hidden');
         };
 
+        window.openRenewModal = function(id) {
+            const player = playersData[id];
+            if(player) {
+                document.getElementById('renewPlayerId').value = id;
+                document.getElementById('renewPlayerName').value = player.name;
+                document.getElementById('renewDays').value = "30";
+                document.getElementById('renewCustomDiv').classList.add('hidden');
+                document.getElementById('renewTotalPrice').value = 200;
+                document.getElementById('renewPaid').value = 200;
+                document.getElementById('renewDebt').value = 0;
+                document.getElementById('renewModal').classList.remove('hidden');
+                document.getElementById('renewModal').classList.add('flex');
+            }
+        };
+
+        window.closeRenewModal = function() {
+            document.getElementById('renewModal').classList.remove('flex');
+            document.getElementById('renewModal').classList.add('hidden');
+        };
+
+        window.submitRenewPlayer = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('renewPlayerId').value;
+            let daysVal = document.getElementById('renewDays').value;
+            let totalDays = 30;
+            if(daysVal === '15') totalDays = 15;
+            else if(daysVal === 'custom') {
+                totalDays = parseInt(document.getElementById('renewCustomDaysInput').value) || 30;
+            }
+
+            const today = new Date().toISOString().slice(0,10);
+            const newTotalPrice = parseFloat(document.getElementById('renewTotalPrice').value) || 0;
+            const newPaid = parseFloat(document.getElementById('renewPaid').value) || 0;
+            const newDebt = parseFloat(document.getElementById('renewDebt').value) || 0;
+
+            update(ref(db, `players/${id}`), {
+                startDate: today,
+                totalDays: totalDays,
+                totalPrice: newTotalPrice,
+                paid: newPaid,
+                debt: newDebt
+            }).then(() => {
+                closeRenewModal();
+            });
+        };
+
         window.updatePlayerFinancials = function(e) {
             e.preventDefault();
             const id = document.getElementById('editPlayerId').value;
@@ -438,6 +552,7 @@
                 month: document.getElementById('playerMonth').value,
                 startDate: document.getElementById('playerDate').value,
                 totalDays: totalDays,
+                totalPrice: parseFloat(document.getElementById('playerTotalPrice').value) || 0,
                 paid: parseFloat(document.getElementById('playerPaid').value) || 0,
                 debt: parseFloat(document.getElementById('playerDebt').value) || 0
             };
@@ -451,17 +566,6 @@
         window.deletePlayer = function(id) {
             if(confirm('هل أنت متأكد من حذف هذا اللاعب؟')) {
                 remove(ref(db, `players/${id}`));
-            }
-        };
-
-        window.renewPlayer = function(id) {
-            const player = playersData[id];
-            if (player) {
-                const today = new Date().toISOString().slice(0,10);
-                update(ref(db, `players/${id}`), {
-                    startDate: today,
-                    totalDays: player.totalDays || 30
-                });
             }
         };
 
@@ -554,11 +658,11 @@
                         <div class="space-y-2 text-sm border-t border-slate-700/50 pt-3">
                             <div class="flex justify-between">
                                 <span class="text-slate-400">الواصل الفعلي:</span>
-                                <span class="text-emerald-400 font-bold">$${sumPaid}</span>
+                                <span class="text-emerald-400 font-bold">${sumPaid} ل.س</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-400">الديون (غير الواصل):</span>
-                                <span class="text-amber-400 font-bold">$${sumDebt}</span>
+                                <span class="text-amber-400 font-bold">${sumDebt} ل.س</span>
                             </div>
                         </div>
                     </div>
@@ -617,14 +721,15 @@
                             <td class="p-4 text-slate-300">${p.startDate || '-'}</td>
                             <td class="p-4 text-slate-300"><span class="bg-slate-700/50 px-2 py-1 rounded text-xs">${totalDays} يوم</span></td>
                             <td class="p-4 font-bold ${daysLeft > 0 ? 'text-emerald-400' : 'text-red-400'}">${daysLeft > 0 ? daysLeft + ' يوم' : 'منتهي'}</td>
-                            <td class="p-4 text-emerald-400 font-semibold">$${p.paid || 0}</td>
-                            <td class="p-4 text-amber-400 font-semibold">${hasDebt ? '$' + p.debt + ' (دين)' : 'مخلص'}</td>
+                            <td class="p-4 text-white font-semibold">${p.totalPrice || 200} ل.س</td>
+                            <td class="p-4 text-emerald-400 font-semibold">${p.paid || 0} ل.س</td>
+                            <td class="p-4 text-amber-400 font-semibold">${hasDebt ? p.debt + ' ل.س (دين)' : 'مخلص'}</td>
                             <td class="p-4">${statusBadge}</td>
                             <td class="p-4 text-center flex items-center justify-center gap-2">
                                 <button onclick="openEditModal('${id}')" class="bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white px-2.5 py-1.5 rounded-lg text-xs transition flex items-center gap-1" title="تعديل الحساب أو تسديد الدين">
                                     <i class="fa-solid fa-pen-to-square"></i> تعديل
                                 </button>
-                                <button onclick="renewPlayer('${id}')" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white px-2.5 py-1.5 rounded-lg text-xs transition flex items-center gap-1" title="تجديد الاشتراك">
+                                <button onclick="openRenewModal('${id}')" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white px-2.5 py-1.5 rounded-lg text-xs transition flex items-center gap-1" title="تجديد الاشتراك بمدة وسعر جديد">
                                     <i class="fa-solid fa-rotate-right"></i> تجديد
                                 </button>
                                 <button onclick="deletePlayer('${id}')" class="text-slate-500 hover:text-red-400 transition p-2" title="حذف">
@@ -639,7 +744,7 @@
             document.getElementById('counterBadge').innerText = `عدد اللاعبين المعروضين: ${displayCount}`;
 
             if (displayCount === 0) {
-                tableBody.innerHTML = `<tr><td colspan="9" class="text-center p-6 text-slate-500">لا توجد بيانات مطابقة لخيارات الفلترة أو البحث الحالية.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="10" class="text-center p-6 text-slate-500">لا توجد بيانات مطابقة لخيارات الفلترة أو البحث الحالية.</td></tr>`;
             }
         };
     </script>
