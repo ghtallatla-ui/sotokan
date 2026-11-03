@@ -19,7 +19,7 @@
                 <h1 class="text-2xl font-bold text-red-500 flex items-center gap-3">
                     <i class="fa-solid fa-dumbbell text-3xl"></i> نادي شوتوكان VIP - كمال أجسام
                 </h1>
-                <p class="text-slate-400 text-xs mt-1">نظام الإدارة الشامل (اشتراكات، ديون، وتتبع المبالغ)</p>
+                <p class="text-slate-400 text-xs mt-1">نظام الإدارة السحابي الآمن (تخزين سحابي كامل لا يضيع)</p>
             </div>
             <button onclick="openAddModal()" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-medium transition shadow-md flex items-center gap-2 text-sm w-full md:w-auto justify-center">
                 <i class="fa-solid fa-user-plus"></i> إضافة لاعب جديد
@@ -50,18 +50,18 @@
             <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
                 <label class="text-slate-300 font-medium text-sm"><i class="fa-regular fa-calendar-days text-red-500"></i> اختر الشهر:</label>
                 <select id="filterMonth" onchange="renderApp()" class="bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-red-500">
-                    <option value="1">شهر 1 (كانون الثاني)</option>
-                    <option value="2">شهر 2 (شباط)</option>
-                    <option value="3">شهر 3 (آذار)</option>
-                    <option value="4">شهر 4 (نيسان)</option>
-                    <option value="5">شهر 5 (أيار)</option>
-                    <option value="6">شهر 6 (حزيران)</option>
-                    <option value="7">شهر 7 (تموز)</option>
-                    <option value="8">شهر 8 (آب)</option>
-                    <option value="9">شهر 9 (أيلول)</option>
-                    <option value="10">شهر 10 (تشرين الأول)</option>
-                    <option value="11" selected>شهر 11 (تشرين الثاني)</option>
-                    <option value="12">شهر 12 (كانون الأول)</option>
+                    <option value="1">شهر 1</option>
+                    <option value="2">شهر 2</option>
+                    <option value="3">شهر 3</option>
+                    <option value="4">شهر 4</option>
+                    <option value="5">شهر 5</option>
+                    <option value="6">شهر 6</option>
+                    <option value="7">شهر 7</option>
+                    <option value="8">شهر 8</option>
+                    <option value="9">شهر 9</option>
+                    <option value="10">شهر 10</option>
+                    <option value="11" selected>شهر 11</option>
+                    <option value="12">شهر 12</option>
                 </select>
             </div>
             <div class="w-full md:w-72">
@@ -90,7 +90,7 @@
                                 <th class="p-4">مدة الاشتراك</th>
                                 <th class="p-4">الأيام المتبقية</th>
                                 <th class="p-4">المدفوع (واصل)</th>
-                                <th class="p-4">المتبقي (دين/غير واصل)</th>
+                                <th class="p-4">المتبقي (دين)</th>
                                 <th class="p-4">الحالة</th>
                                 <th class="p-4 text-center">الإجراءات</th>
                             </tr>
@@ -130,9 +130,9 @@
                 <!-- النسخ الاحتياطي -->
                 <div class="space-y-2 bg-slate-900 p-4 rounded-xl border border-slate-700">
                     <h3 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                        <i class="fa-solid fa-database text-emerald-400"></i> النسخ الاحتياطي للبيانات
+                        <i class="fa-solid fa-database text-emerald-400"></i> النسخ الاحتياطي للبيانات (أمان إضافي)
                     </h3>
-                    <p class="text-slate-400 text-xs">تحميل كافة سجلات اللاعبين والاشتراكات كملف أمان أوفلاين.</p>
+                    <p class="text-slate-400 text-xs">تحميل كافة سجلات اللاعبين كملف أمان أوفلاين على جهازك.</p>
                     <button onclick="downloadBackup()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-medium transition flex items-center gap-2">
                         <i class="fa-solid fa-file-export"></i> تنزيل ملف النسخة الاحتياطية
                     </button>
@@ -208,24 +208,30 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-slate-400 text-sm mb-1">مدة الاشتراك</label>
-                        <select id="playerDays" onchange="checkCustomDays()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                        <select id="playerDays" onchange="onSubscriptionTypeChange()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
                             <option value="30">شهر كامل (30 يوم)</option>
                             <option value="15">نص شهر (15 يوم)</option>
-                            <option value="custom">أيام أخرى...</option>
+                            <option value="custom">أيام مخصصة...</option>
                         </select>
                     </div>
                     <div id="customDaysDiv" class="hidden">
                         <label class="block text-slate-400 text-sm mb-1">عدد الأيام</label>
-                        <input type="number" id="customDaysInput" value="10" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                        <input type="number" id="customDaysInput" value="10" oninput="calculateDefaultPrice()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
                     </div>
                     <div>
-                        <label class="block text-slate-400 text-sm mb-1">المبلغ المدفوع (الواصل)</label>
-                        <input type="number" id="playerPaid" value="0" placeholder="0 إذا لم يدفع شيئاً" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                        <label class="block text-slate-400 text-sm mb-1">السعر الإجمالي</label>
+                        <input type="number" id="playerTotalPrice" value="200" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
                     </div>
                 </div>
-                <div>
-                    <label class="block text-slate-400 text-sm mb-1">المبلغ المتبقي (غير واصل / دين)</label>
-                    <input type="number" id="playerDebt" value="0" placeholder="قيمة المبلغ المؤجل" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-slate-400 text-sm mb-1">المبلغ المدفوع (الواصل)</label>
+                        <input type="number" id="playerPaid" value="200" required oninput="calculateDebt()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 text-sm mb-1">المبلغ المتبقي (الدين)</label>
+                        <input type="number" id="playerDebt" value="0" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                    </div>
                 </div>
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-700">
                     <button type="button" onclick="closeAddModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl transition">إلغاء</button>
@@ -270,8 +276,9 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, push, onValue, remove, update, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+        // تم ربط قاعدة البيانات الخاصة بك هنا بنجاح
         const firebaseConfig = {
-            databaseURL: "https://sotokan-default-rtdb.firebaseio.com"
+            databaseURL: "https://shotokan-fc198-default-rtdb.firebaseio.com"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -334,16 +341,50 @@
             }
         };
 
-        window.checkCustomDays = function() {
+        window.onSubscriptionTypeChange = function() {
             const val = document.getElementById('playerDays').value;
             const customDiv = document.getElementById('customDaysDiv');
-            if(val === 'custom') customDiv.classList.remove('hidden');
-            else customDiv.classList.add('hidden');
+            const priceInput = document.getElementById('playerTotalPrice');
+            const paidInput = document.getElementById('playerPaid');
+
+            if(val === '30') {
+                customDiv.classList.add('hidden');
+                priceInput.value = 200;
+                paidInput.value = 200;
+            } else if(val === '15') {
+                customDiv.classList.add('hidden');
+                priceInput.value = 100;
+                paidInput.value = 100;
+            } else if(val === 'custom') {
+                customDiv.classList.remove('hidden');
+                calculateDefaultPrice();
+            }
+            calculateDebt();
+        };
+
+        window.calculateDefaultPrice = function() {
+            const days = parseInt(document.getElementById('customDaysInput').value) || 1;
+            const suggestedPrice = Math.round((200 / 30) * days);
+            document.getElementById('playerTotalPrice').value = suggestedPrice;
+            document.getElementById('playerPaid').value = suggestedPrice;
+            calculateDebt();
+        };
+
+        window.calculateDebt = function() {
+            const total = parseFloat(document.getElementById('playerTotalPrice').value) || 0;
+            const paid = parseFloat(document.getElementById('playerPaid').value) || 0;
+            const debt = total - paid;
+            document.getElementById('playerDebt').value = debt >= 0 ? debt : 0;
         };
 
         window.openAddModal = function() {
             document.getElementById('playerModal').classList.remove('hidden');
             document.getElementById('playerModal').classList.add('flex');
+            document.getElementById('playerDays').value = "30";
+            document.getElementById('customDaysDiv').classList.add('hidden');
+            document.getElementById('playerTotalPrice').value = 200;
+            document.getElementById('playerPaid').value = 200;
+            document.getElementById('playerDebt').value = 0;
         };
 
         window.closeAddModal = function() {
@@ -397,15 +438,14 @@
                 month: document.getElementById('playerMonth').value,
                 startDate: document.getElementById('playerDate').value,
                 totalDays: totalDays,
-                paid: parseFloat(document.getElementById('playerPaid').value) || 0, // الواصل
-                debt: parseFloat(document.getElementById('playerDebt').value) || 0  // غير الواصل (دين)
+                paid: parseFloat(document.getElementById('playerPaid').value) || 0,
+                debt: parseFloat(document.getElementById('playerDebt').value) || 0
             };
 
             push(playersRef, newPlayer);
             closeAddModal();
             document.getElementById('playerForm').reset();
             document.getElementById('playerDate').valueAsDate = new Date();
-            document.getElementById('customDaysDiv').classList.add('hidden');
         };
 
         window.deletePlayer = function(id) {
@@ -578,7 +618,7 @@
                             <td class="p-4 text-slate-300"><span class="bg-slate-700/50 px-2 py-1 rounded text-xs">${totalDays} يوم</span></td>
                             <td class="p-4 font-bold ${daysLeft > 0 ? 'text-emerald-400' : 'text-red-400'}">${daysLeft > 0 ? daysLeft + ' يوم' : 'منتهي'}</td>
                             <td class="p-4 text-emerald-400 font-semibold">$${p.paid || 0}</td>
-                            <td class="p-4 text-amber-400 font-semibold">${hasDebt ? '$' + p.debt + ' (غير واصل)' : 'مخلص'}</td>
+                            <td class="p-4 text-amber-400 font-semibold">${hasDebt ? '$' + p.debt + ' (دين)' : 'مخلص'}</td>
                             <td class="p-4">${statusBadge}</td>
                             <td class="p-4 text-center flex items-center justify-center gap-2">
                                 <button onclick="openEditModal('${id}')" class="bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white px-2.5 py-1.5 rounded-lg text-xs transition flex items-center gap-1" title="تعديل الحساب أو تسديد الدين">
