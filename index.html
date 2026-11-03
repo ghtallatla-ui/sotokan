@@ -19,7 +19,7 @@
                 <h1 class="text-2xl font-bold text-red-500 flex items-center gap-3">
                     <i class="fa-solid fa-dumbbell text-3xl"></i> نادي شوتوكان VIP - كمال أجسام
                 </h1>
-                <p class="text-slate-400 text-xs mt-1">نظام الإدارة المقسم (أشهر، منتهين، ديون، إعدادات، وأرباح)</p>
+                <p class="text-slate-400 text-xs mt-1">نظام الإدارة الشامل (اشتراكات، ديون، وتتبع المبالغ)</p>
             </div>
             <button onclick="openAddModal()" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-medium transition shadow-md flex items-center gap-2 text-sm w-full md:w-auto justify-center">
                 <i class="fa-solid fa-user-plus"></i> إضافة لاعب جديد
@@ -35,7 +35,7 @@
                 <i class="fa-solid fa-clock-rotate-left text-red-400"></i> الاشتراكات المنتهية
             </button>
             <button id="tab-debts" onclick="switchTab('debts')" class="bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 transition">
-                <i class="fa-solid fa-hand-holding-dollar text-amber-400"></i> الحسابات والديون
+                <i class="fa-solid fa-hand-holding-dollar text-amber-400"></i> الحسابات والديون (لم يدفع)
             </button>
             <button id="tab-revenue" onclick="switchTab('revenue')" class="bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 transition">
                 <i class="fa-solid fa-chart-line text-emerald-400"></i> إجمالي الدخل
@@ -45,17 +45,23 @@
             </button>
         </div>
 
-        <!-- شريط التصفية والبحث (يظهر في أقسام اللاعبين والمنتهين والديون) -->
+        <!-- شريط التصفية والبحث -->
         <div id="filterControlBar" class="bg-slate-800 border border-slate-700 rounded-2xl p-4 mb-6 shadow-md flex flex-wrap items-center justify-between gap-4">
             <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
                 <label class="text-slate-300 font-medium text-sm"><i class="fa-regular fa-calendar-days text-red-500"></i> اختر الشهر:</label>
                 <select id="filterMonth" onchange="renderApp()" class="bg-slate-900 border border-slate-700 text-white rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-red-500">
-                    <option value="10">شهر 10</option>
-                    <option value="11" selected>شهر 11</option>
-                    <option value="12">شهر 12</option>
-                    <option value="1">شهر 1</option>
-                    <option value="2">شهر 2</option>
-                    <option value="3">شهر 3</option>
+                    <option value="1">شهر 1 (كانون الثاني)</option>
+                    <option value="2">شهر 2 (شباط)</option>
+                    <option value="3">شهر 3 (آذار)</option>
+                    <option value="4">شهر 4 (نيسان)</option>
+                    <option value="5">شهر 5 (أيار)</option>
+                    <option value="6">شهر 6 (حزيران)</option>
+                    <option value="7">شهر 7 (تموز)</option>
+                    <option value="8">شهر 8 (آب)</option>
+                    <option value="9">شهر 9 (أيلول)</option>
+                    <option value="10">شهر 10 (تشرين الأول)</option>
+                    <option value="11" selected>شهر 11 (تشرين الثاني)</option>
+                    <option value="12">شهر 12 (كانون الأول)</option>
                 </select>
             </div>
             <div class="w-full md:w-72">
@@ -68,7 +74,7 @@
 
         <!-- الأقسام المختلفة -->
         <main>
-            <!-- 1. جدول عرض اللاعبين (جميعهم / المنتهين / الديون) -->
+            <!-- 1. جدول عرض اللاعبين -->
             <div id="section-table" class="bg-slate-800 border border-slate-700 rounded-2xl shadow-lg overflow-hidden">
                 <div class="p-4 border-b border-slate-700 flex justify-between items-center">
                     <h2 id="sectionTitle" class="text-base md:text-lg font-bold text-white">قائمة اللاعبين</h2>
@@ -83,8 +89,8 @@
                                 <th class="p-4">تاريخ البدء</th>
                                 <th class="p-4">مدة الاشتراك</th>
                                 <th class="p-4">الأيام المتبقية</th>
-                                <th class="p-4">المدفوع</th>
-                                <th class="p-4">المتبقي (دين)</th>
+                                <th class="p-4">المدفوع (واصل)</th>
+                                <th class="p-4">المتبقي (دين/غير واصل)</th>
                                 <th class="p-4">الحالة</th>
                                 <th class="p-4 text-center">الإجراءات</th>
                             </tr>
@@ -112,10 +118,10 @@
                 <!-- تغيير رمز المرور -->
                 <div class="space-y-3 bg-slate-900 p-4 rounded-xl border border-slate-700">
                     <h3 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                        <i class="fa-solid fa-lock text-amber-400"></i> تغيير رمز مرور النظام
+                        <i class="fa-solid fa-lock text-amber-400"></i> تغيير رمز مرور النظام (الافتراضي 1234)
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <input type="password" id="currentPin" placeholder="الرمز الحالي (الافتراضي 1234)" class="bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
+                        <input type="password" id="currentPin" placeholder="الرمز الحالي" class="bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
                         <input type="password" id="newPin" placeholder="الرمز الجديد" class="bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-white">
                     </div>
                     <button onclick="changePasscode()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl text-xs font-medium transition">تحديث الرمز</button>
@@ -139,12 +145,18 @@
                     </h3>
                     <div class="flex items-center gap-3">
                         <select id="deleteMonthSelect" class="bg-slate-900 border border-slate-700 text-white rounded-xl px-3 py-2 text-xs">
-                            <option value="10">شهر 10</option>
-                            <option value="11">شهر 11</option>
-                            <option value="12">شهر 12</option>
                             <option value="1">شهر 1</option>
                             <option value="2">شهر 2</option>
                             <option value="3">شهر 3</option>
+                            <option value="4">شهر 4</option>
+                            <option value="5">شهر 5</option>
+                            <option value="6">شهر 6</option>
+                            <option value="7">شهر 7</option>
+                            <option value="8">شهر 8</option>
+                            <option value="9">شهر 9</option>
+                            <option value="10">شهر 10</option>
+                            <option value="11" selected>شهر 11</option>
+                            <option value="12">شهر 12</option>
                         </select>
                         <button onclick="deleteSelectedMonth()" class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-xl text-xs font-medium transition flex items-center gap-1">
                             <i class="fa-solid fa-trash"></i> حذف بيانات الشهر المحدد
@@ -174,12 +186,18 @@
                     <div>
                         <label class="block text-slate-400 text-sm mb-1">الشهر المستهدف</label>
                         <select id="playerMonth" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
-                            <option value="10">شهر 10</option>
-                            <option value="11" selected>شهر 11</option>
-                            <option value="12">شهر 12</option>
                             <option value="1">شهر 1</option>
                             <option value="2">شهر 2</option>
                             <option value="3">شهر 3</option>
+                            <option value="4">شهر 4</option>
+                            <option value="5">شهر 5</option>
+                            <option value="6">شهر 6</option>
+                            <option value="7">شهر 7</option>
+                            <option value="8">شهر 8</option>
+                            <option value="9">شهر 9</option>
+                            <option value="10">شهر 10</option>
+                            <option value="11" selected>شهر 11</option>
+                            <option value="12">شهر 12</option>
                         </select>
                     </div>
                     <div>
@@ -201,17 +219,47 @@
                         <input type="number" id="customDaysInput" value="10" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
                     </div>
                     <div>
-                        <label class="block text-slate-400 text-sm mb-1">المبلغ المدفوع</label>
-                        <input type="number" id="playerPaid" value="0" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                        <label class="block text-slate-400 text-sm mb-1">المبلغ المدفوع (الواصل)</label>
+                        <input type="number" id="playerPaid" value="0" placeholder="0 إذا لم يدفع شيئاً" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-slate-400 text-sm mb-1">المبلغ المتبقي (عليك حساب)</label>
-                    <input type="number" id="playerDebt" value="0" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
+                    <label class="block text-slate-400 text-sm mb-1">المبلغ المتبقي (غير واصل / دين)</label>
+                    <input type="number" id="playerDebt" value="0" placeholder="قيمة المبلغ المؤجل" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-red-500">
                 </div>
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-700">
                     <button type="button" onclick="closeAddModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl transition">إلغاء</button>
                     <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-xl transition">حفظ اللاعب</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة تعديل أو تسديد الدين -->
+    <div id="editModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-md p-6 shadow-2xl">
+            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-file-invoice-dollar text-emerald-500"></i> تعديل حساب اللاعب أو تسديد الدين
+            </h3>
+            <form id="editForm" onsubmit="updatePlayerFinancials(event)" class="space-y-4">
+                <input type="hidden" id="editPlayerId">
+                <div>
+                    <label class="block text-slate-400 text-sm mb-1">اسم اللاعب</label>
+                    <input type="text" id="editPlayerName" disabled class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-slate-400">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-slate-400 text-sm mb-1">المبلغ المدفوع (الواصل)</label>
+                        <input type="number" id="editPlayerPaid" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 text-sm mb-1">المتبقي (الدين)</label>
+                        <input type="number" id="editPlayerDebt" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-amber-500">
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4 border-t border-slate-700">
+                    <button type="button" onclick="closeEditModal()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl transition">إلغاء</button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl transition">حفظ التعديل</button>
                 </div>
             </form>
         </div>
@@ -303,6 +351,37 @@
             document.getElementById('playerModal').classList.add('hidden');
         };
 
+        window.openEditModal = function(id) {
+            const player = playersData[id];
+            if(player) {
+                document.getElementById('editPlayerId').value = id;
+                document.getElementById('editPlayerName').value = player.name;
+                document.getElementById('editPlayerPaid').value = player.paid || 0;
+                document.getElementById('editPlayerDebt').value = player.debt || 0;
+                document.getElementById('editModal').classList.remove('hidden');
+                document.getElementById('editModal').classList.add('flex');
+            }
+        };
+
+        window.closeEditModal = function() {
+            document.getElementById('editModal').classList.remove('flex');
+            document.getElementById('editModal').classList.add('hidden');
+        };
+
+        window.updatePlayerFinancials = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('editPlayerId').value;
+            const newPaid = parseFloat(document.getElementById('editPlayerPaid').value) || 0;
+            const newDebt = parseFloat(document.getElementById('editPlayerDebt').value) || 0;
+
+            update(ref(db, `players/${id}`), {
+                paid: newPaid,
+                debt: newDebt
+            }).then(() => {
+                closeEditModal();
+            });
+        };
+
         window.savePlayer = function(e) {
             e.preventDefault();
             let daysVal = document.getElementById('playerDays').value;
@@ -318,8 +397,8 @@
                 month: document.getElementById('playerMonth').value,
                 startDate: document.getElementById('playerDate').value,
                 totalDays: totalDays,
-                paid: parseFloat(document.getElementById('playerPaid').value) || 0,
-                debt: parseFloat(document.getElementById('playerDebt').value) || 0
+                paid: parseFloat(document.getElementById('playerPaid').value) || 0, // الواصل
+                debt: parseFloat(document.getElementById('playerDebt').value) || 0  // غير الواصل (دين)
             };
 
             push(playersRef, newPlayer);
@@ -355,7 +434,7 @@
                 return;
             }
             if (!inputNew || inputNew.length < 3) {
-                alert('الرجاء إدخال رمز جديد صالحة.');
+                alert('الرجاء إدخال رمز جديد صالح.');
                 return;
             }
 
@@ -378,7 +457,7 @@
 
         window.deleteSelectedMonth = function() {
             const selectedMonth = document.getElementById('deleteMonthSelect').value;
-            const pin = prompt(`أدخل رمز المرور للربط وتأكيد حذف شهر ${selectedMonth}:`);
+            const pin = prompt(`أدخل رمز المرور لتأكيد حذف شهر ${selectedMonth}:`);
             if (pin !== currentPasscode) {
                 alert('رمز المرور خاطئ!');
                 return;
@@ -386,8 +465,8 @@
 
             let count = 0;
             for (let id in playersData) {
-                let pMonth = playersData[id].month || "10";
-                if (pMonth === selectedMonth) count++;
+                let pMonth = String(playersData[id].month || "11");
+                if (pMonth === String(selectedMonth)) count++;
             }
 
             if (count === 0) {
@@ -397,8 +476,8 @@
 
             if (confirm(`⚠️ تحذير أخير: هل أنت متأكد من مسح جميع لاعبي شهر ${selectedMonth} وعددهم (${count})؟`)) {
                 for (let id in playersData) {
-                    let pMonth = playersData[id].month || "10";
-                    if (pMonth === selectedMonth) {
+                    let pMonth = String(playersData[id].month || "11");
+                    if (pMonth === String(selectedMonth)) {
                         remove(ref(db, `players/${id}`));
                     }
                 }
@@ -409,7 +488,7 @@
         window.renderRevenue = function() {
             const grid = document.getElementById('revenueGrid');
             grid.innerHTML = '';
-            const months = ['10', '11', '12', '1', '2', '3'];
+            const months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
 
             months.forEach(m => {
                 let sumPaid = 0;
@@ -418,7 +497,7 @@
 
                 for (let id in playersData) {
                     let p = playersData[id];
-                    let pMonth = p.month || "10";
+                    let pMonth = String(p.month || "11");
                     if (pMonth === m) {
                         count++;
                         sumPaid += (p.paid || 0);
@@ -434,11 +513,11 @@
                         </div>
                         <div class="space-y-2 text-sm border-t border-slate-700/50 pt-3">
                             <div class="flex justify-between">
-                                <span class="text-slate-400">إجمالي المدخول:</span>
+                                <span class="text-slate-400">الواصل الفعلي:</span>
                                 <span class="text-emerald-400 font-bold">$${sumPaid}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-slate-400">الديون المتبقية:</span>
+                                <span class="text-slate-400">الديون (غير الواصل):</span>
                                 <span class="text-amber-400 font-bold">$${sumDebt}</span>
                             </div>
                         </div>
@@ -457,7 +536,7 @@
 
             if (activeTab === 'all') titleElement.innerText = `لاعبين شهر ${selectedMonth}`;
             else if (activeTab === 'expired') titleElement.innerText = `الاشتراكات المنتهية - شهر ${selectedMonth}`;
-            else if (activeTab === 'debts') titleElement.innerText = `اللاعبون الذين عليهم حسابات (ديون) - شهر ${selectedMonth}`;
+            else if (activeTab === 'debts') titleElement.innerText = `اللاعبون الذين عليهم ديون وغير واصل - شهر ${selectedMonth}`;
 
             tableBody.innerHTML = '';
             const today = new Date();
@@ -465,7 +544,7 @@
 
             for (let id in playersData) {
                 let p = playersData[id];
-                let playerMonth = p.month || "10";
+                let playerMonth = String(p.month || "11");
                 let nameMatches = (p.name || '').toLowerCase().includes(searchVal);
 
                 if (playerMonth === selectedMonth && nameMatches) {
@@ -479,7 +558,6 @@
                     let isExpired = daysLeft <= 0;
                     let hasDebt = (p.debt || 0) > 0;
 
-                    // فلترة العرض حسب القسم المفعل
                     if (activeTab === 'expired' && !isExpired) continue;
                     if (activeTab === 'debts' && !hasDebt) continue;
 
@@ -500,9 +578,12 @@
                             <td class="p-4 text-slate-300"><span class="bg-slate-700/50 px-2 py-1 rounded text-xs">${totalDays} يوم</span></td>
                             <td class="p-4 font-bold ${daysLeft > 0 ? 'text-emerald-400' : 'text-red-400'}">${daysLeft > 0 ? daysLeft + ' يوم' : 'منتهي'}</td>
                             <td class="p-4 text-emerald-400 font-semibold">$${p.paid || 0}</td>
-                            <td class="p-4 text-amber-400 font-semibold">${hasDebt ? '$' + p.debt : 'لا يوجد'}</td>
+                            <td class="p-4 text-amber-400 font-semibold">${hasDebt ? '$' + p.debt + ' (غير واصل)' : 'مخلص'}</td>
                             <td class="p-4">${statusBadge}</td>
                             <td class="p-4 text-center flex items-center justify-center gap-2">
+                                <button onclick="openEditModal('${id}')" class="bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white px-2.5 py-1.5 rounded-lg text-xs transition flex items-center gap-1" title="تعديل الحساب أو تسديد الدين">
+                                    <i class="fa-solid fa-pen-to-square"></i> تعديل
+                                </button>
                                 <button onclick="renewPlayer('${id}')" class="bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white px-2.5 py-1.5 rounded-lg text-xs transition flex items-center gap-1" title="تجديد الاشتراك">
                                     <i class="fa-solid fa-rotate-right"></i> تجديد
                                 </button>
